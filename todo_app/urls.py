@@ -15,9 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
+from rest_framework.schemas import get_schema_view
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('',include('tasks.urls')),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    # the doc view
+    path('openapi/', get_schema_view(title="ToDoAPI", description="API for ToDoList"), name='openapi-schema'),
+    path('docs/', TemplateView.as_view(
+        template_name='swagger-ui.html',extra_context={'schema_url':'openapi-schema'}), name='swagger-ui'),
 ]
